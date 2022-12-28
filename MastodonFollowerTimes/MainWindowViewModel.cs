@@ -1,6 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.IO.Pipes;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MastodonFollowerTimes
@@ -32,6 +34,7 @@ namespace MastodonFollowerTimes
 
                 var followers = await client.GetFollowerIdsForAccountId(accountId);
                 var totalStatuses = (uint)0;
+                var list = new List<StatusPerHour>();
                 foreach (var follower in followers)
                 {
                     var statuses = await client.GetStatusesForFollowerId(follower.Id);
@@ -39,14 +42,17 @@ namespace MastodonFollowerTimes
                     {
                         totalStatuses++;
                         var hour = status.CreateAtUtc.ToLocalTime().Hour;
-                        var existingHour = StatusesPerHour.FirstOrDefault(x => x.Hour == (byte)hour);
+                        var existingHour = list.FirstOrDefault(x => x.Hour == (byte)hour);
                         if (existingHour == null)
-                            StatusesPerHour.Add(new StatusPerHour { Hour = (byte)hour, StatusCount = 1 });
+                            list.Add(new StatusPerHour { Hour = (byte)hour, StatusCount = 1 });
                         else
                             existingHour.StatusCount++;
                     }
-                    foreach (var status in StatusesPerHour)
-                        status.TotalStatuses = totalStatuses;
+                }
+                foreach (var status in list.OrderBy(x => x.Hour))
+                {
+                    status.TotalStatuses = totalStatuses;
+                    StatusesPerHour.Add(status);
                 }
             }
             finally
