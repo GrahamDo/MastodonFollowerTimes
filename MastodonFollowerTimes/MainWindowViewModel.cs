@@ -54,15 +54,13 @@ namespace MastodonFollowerTimes
             Settings = WpfSettings.Load();
             StatusesPerHour = new ObservableCollection<StatusPerHour>();
             EnableControls = true;
-            InProgressValue = 0;
-            InProgressMaximum = 0;
         }
 
         public async Task LoadData()
         {
             StatusesPerHour.Clear();
             InProgressValue = 0;
-            InProgressMaximum = 0;
+            InProgressMaximum = 1;
             EnableControls = false;
             try
             {
