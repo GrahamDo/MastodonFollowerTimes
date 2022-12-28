@@ -2,7 +2,7 @@
 
 namespace MastodonFollowerTimes;
 
-internal class MastodonAccount
+internal class MastodonId
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }

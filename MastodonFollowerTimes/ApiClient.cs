@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Security;
 using System.Text;
@@ -63,13 +64,19 @@ internal class ApiClient
 
         var request = new RestRequest($"accounts/lookup?acct={accountName}");
         var response = await _restClient.GetAsync(request);
-        if (response.Content == null)
-            throw new InvalidOperationException("Lookup account API method returned nothing");
+        CheckForNullContent(response.Content, "Lookup account");
 
-        var account = JsonConvert.DeserializeObject<MastodonAccount>(response.Content);
+        Debug.Assert(response.Content != null, "response.Content != null");
+        var account = JsonConvert.DeserializeObject<MastodonId>(response.Content);
         return account?.Id ??
                throw new ApplicationException(
                    "Couldn't get the account details. Are you sure you entered the account name correctly?");
+    }
+
+    private void CheckForNullContent(string? content, string apiMethodName)
+    {
+        if (content == null)
+            throw new InvalidOperationException($"{apiMethodName} API method returned nothing");
     }
 
     private void VerifyRestClientSpecified()
@@ -79,9 +86,17 @@ internal class ApiClient
                 $"You must call {nameof(VerifyCredentials)} before calling this method");
     }
 
-    public async Task<List<string>> GetFollowerIdsForAccountId(string accountId)
+    public async Task<List<MastodonId>> GetFollowerIdsForAccountId(string accountId)
     {
-        throw new System.NotImplementedException();
+        VerifyRestClientSpecified();
+
+        var request = new RestRequest($"accounts/{accountId}/followers?limit=80");
+        var response = await _restClient.GetAsync(request);
+        CheckForNullContent(response.Content, "Lookup followers");
+
+        Debug.Assert(response.Content != null, "response.Content != null");
+        var followerIds = JsonConvert.DeserializeObject<List<MastodonId>>(response.Content);
+        return followerIds;
     }
 
     public async Task<List<MastodonStatus>> GetStatusesForFollowerId(string followerId)
