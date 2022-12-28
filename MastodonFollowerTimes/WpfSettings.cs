@@ -24,6 +24,7 @@ internal class WpfSettings
 
     public void Save()
     {
-        throw new NotImplementedException();
+        var serialised = JsonConvert.SerializeObject(this);
+        File.WriteAllText(SettingsFileName, serialised);
     }
 }

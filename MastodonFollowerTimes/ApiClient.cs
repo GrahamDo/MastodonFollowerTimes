@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Security;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators.OAuth2;
 
@@ -30,7 +32,7 @@ internal class ApiClient
         var request = new RestRequest($"apps/verify_credentials");
         try
         {
-            var response = await _restClient.GetAsync(request);
+            await _restClient.GetAsync(request);
         }
         catch (HttpRequestException ex)
         {
@@ -55,7 +57,26 @@ internal class ApiClient
 
     public async Task<string> GetIdForAccountName(string accountName)
     {
-        throw new System.NotImplementedException();
+        VerifyRestClientSpecified();
+        if (string.IsNullOrEmpty(accountName))
+            throw new ApplicationException("Please specify the account name");
+
+        var request = new RestRequest($"accounts/lookup?acct={accountName}");
+        var response = await _restClient.GetAsync(request);
+        if (response.Content == null)
+            throw new InvalidOperationException("Lookup account API method returned nothing");
+
+        var account = JsonConvert.DeserializeObject<MastodonAccount>(response.Content);
+        return account?.Id ??
+               throw new ApplicationException(
+                   "Couldn't get the account details. Are you sure you entered the account name correctly?");
+    }
+
+    private void VerifyRestClientSpecified()
+    {
+        if (_restClient == null)
+            throw new InvalidOperationException(
+                $"You must call {nameof(VerifyCredentials)} before calling this method");
     }
 
     public async Task<List<string>> GetFollowerIdsForAccountId(string accountId)
