@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace MastodonFollowerTimes
@@ -24,6 +23,10 @@ namespace MastodonFollowerTimes
                     throw new ApplicationException("ViewModel is null");
 
                 await vm.LoadData();
+            }
+            catch (ApplicationException ex)
+            {
+                MessageBox.Show(this, ex.Message, Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             catch (Exception ex)
             {
