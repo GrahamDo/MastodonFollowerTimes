@@ -99,8 +99,17 @@ internal class ApiClient
         return followerIds;
     }
 
-    public async Task<List<MastodonStatus>> GetStatusesForFollowerId(string followerId)
+    public async Task<List<MastodonStatus>> GetStatusesForFollowerId(string accountId)
     {
-        throw new System.NotImplementedException();
+        VerifyRestClientSpecified();
+        
+        var request = new RestRequest($"accounts/{accountId}/statuses?limit=40");
+        var response = await _restClient.GetAsync(request);
+        CheckForNullContent(response.Content, $"Get statuses for follower {accountId}");
+
+        Debug.Assert(response.Content != null, "response.Content != null");
+        var statuses = JsonConvert.DeserializeObject<List<MastodonStatus>>(response.Content);
+        return statuses;
+
     }
 }

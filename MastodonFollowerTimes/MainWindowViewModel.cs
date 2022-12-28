@@ -31,10 +31,10 @@ namespace MastodonFollowerTimes
                 Settings.Save();
 
                 var followers = await client.GetFollowerIdsForAccountId(accountId);
+                var totalStatuses = (uint)0;
                 foreach (var follower in followers)
                 {
                     var statuses = await client.GetStatusesForFollowerId(follower.Id);
-                    var totalStatuses = (uint)0;
                     foreach (var status in statuses)
                     {
                         totalStatuses++;
