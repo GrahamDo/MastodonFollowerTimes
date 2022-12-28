@@ -21,4 +21,9 @@ internal class WpfSettings
         return JsonConvert.DeserializeObject<WpfSettings>(text) ??
                throw new ApplicationException($"Your '{SettingsFileName}' appears to be empty or corrupt.");
     }
+
+    public void Save()
+    {
+        throw new NotImplementedException();
+    }
 }

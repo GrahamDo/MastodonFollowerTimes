@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO.Pipes;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MastodonFollowerTimes
 {
@@ -16,16 +19,34 @@ namespace MastodonFollowerTimes
             EnableControls = true;
         }
 
-        public void LoadData()
+        public async Task LoadData()
         {
+            StatusesPerHour.Clear();
             EnableControls = false;
             try
             {
-                StatusesPerHour.Clear();
-                for (byte i = 0; i < 25; i++)
+                var client = new ApiClient();
+                await client.VerifyCredentials(Settings.InstanceUrl, Settings.Token);
+                var accountId = await client.GetIdForAccountName(Settings.AccountName);
+                Settings.Save();
+
+                var followerIds = await client.GetFollowerIdsForAccountId(accountId);
+                foreach (var followerId in followerIds)
                 {
-                    StatusesPerHour.Add(new StatusPerHour
-                        { Hour = i, StatusCount = 25 + (uint)i, TotalStatuses = 240 });
+                    var statuses = await client.GetStatusesForFollowerId(followerId);
+                    var totalStatuses = (uint)0;
+                    foreach (var status in statuses)
+                    {
+                        totalStatuses++;
+                        var hour = status.CreateAtUtc.ToLocalTime().Hour;
+                        var existingHour = StatusesPerHour.FirstOrDefault(x => x.Hour == (byte)hour);
+                        if (existingHour == null)
+                            StatusesPerHour.Add(new StatusPerHour { Hour = (byte)hour, StatusCount = 1 });
+                        else
+                            existingHour.StatusCount++;
+                    }
+                    foreach (var status in StatusesPerHour)
+                        status.TotalStatuses = totalStatuses;
                 }
             }
             finally
