@@ -21,31 +21,31 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Column="0" Grid.Row="0">Instance URL:</Label>
         <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,5,0" 
-                 IsEnabled="{Binding EnableControls, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding EnableControls}"
                  Text="{Binding Settings.InstanceUrl}"></TextBox>
         <Label Grid.Column="0" Grid.Row="1">Token:</Label>
         <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Margin="0,0,5,0" 
-                 IsEnabled="{Binding EnableControls, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding EnableControls}"
                  Text="{Binding Settings.Token}"></TextBox>
         <Label Grid.Column="0" Grid.Row="2">Account Name:</Label>
         <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Margin="0,0,5,0" 
-                 IsEnabled="{Binding EnableControls, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding EnableControls}"
                  Text="{Binding Settings.AccountName}"></TextBox>
         <Button Grid.Column="1" Grid.Row="3" Padding="5,0,5,0" Margin="0,0,5,0" IsDefault="True"
-                IsEnabled="{Binding EnableControls, UpdateSourceTrigger=PropertyChanged}"
+                IsEnabled="{Binding EnableControls}"
                 Content="Find Best Times" HorizontalAlignment="Right" Width="Auto" Click="Button_Click"></Button>
         <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,5,0,0" 
-                  ItemsSource="{Binding StatusesPerHour, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding EnableControls, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{Binding StatusesPerHour}"
+                  IsEnabled="{Binding EnableControls}"
                   >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="{Binding Hour}" Width="24"></Label>
-                        <ProgressBar Height="24" Value="{Binding StatusCount, UpdateSourceTrigger=PropertyChanged}" 
-                                     Maximum="{Binding TotalStatuses, UpdateSourceTrigger=PropertyChanged}"
+                        <ProgressBar Height="24" Value="{Binding StatusCount}" 
+                                     Maximum="{Binding TotalStatuses}"
                                      Width="500"
-                                     ToolTip="{Binding PercentString, UpdateSourceTrigger=PropertyChanged}"
+                                     ToolTip="{Binding PercentString}"
                                      />
                     </StackPanel>
                 </DataTemplate>

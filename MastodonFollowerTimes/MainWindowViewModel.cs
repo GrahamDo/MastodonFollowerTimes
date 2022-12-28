@@ -1,18 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MastodonFollowerTimes
 {
-    internal class MainWindowViewModel
+    internal class MainWindowViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public string WindowTitle => "Mastodon Follower Times: Fine the best time to post";
         public WpfSettings Settings { get; }
         public ObservableCollection<StatusPerHour> StatusesPerHour { get; set; }
-        public bool EnableControls { get; set; }
+
+        private bool _enableControls;
+        public bool EnableControls
+        {
+            get => _enableControls;
+            set
+            {
+                _enableControls = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnableControls)));
+            }
+        }
 
         public MainWindowViewModel()
         {
@@ -59,6 +71,11 @@ namespace MastodonFollowerTimes
             {
                 EnableControls = true;
             }
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
