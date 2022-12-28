@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace MastodonFollowerTimes
 {
@@ -11,6 +12,15 @@ namespace MastodonFollowerTimes
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as MainWindowViewModel;
+            if (vm == null)
+                throw new ApplicationException("ViewModel is null");
+
+            vm.LoadData();
         }
     }
 }
