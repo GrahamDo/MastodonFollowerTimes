@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
-using System.Net.Security;
 using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
@@ -96,7 +93,8 @@ internal class ApiClient
 
         Debug.Assert(response.Content != null, "response.Content != null");
         var followerIds = JsonConvert.DeserializeObject<List<MastodonId>>(response.Content);
-        return followerIds;
+        return followerIds ?? throw new ApplicationException(
+            "Couldn't get the list of followers. Are you sure you entered the account has followers?");
     }
 
     public async Task<List<MastodonStatus>> GetStatusesForFollowerId(string accountId)
@@ -109,7 +107,6 @@ internal class ApiClient
 
         Debug.Assert(response.Content != null, "response.Content != null");
         var statuses = JsonConvert.DeserializeObject<List<MastodonStatus>>(response.Content);
-        return statuses;
-
+        return statuses ?? new List<MastodonStatus>();
     }
 }
