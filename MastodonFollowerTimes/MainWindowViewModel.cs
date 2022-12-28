@@ -23,6 +23,29 @@ namespace MastodonFollowerTimes
             {
                 _enableControls = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnableControls)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InProgressVisibility)));
+            }
+        }
+
+        public string InProgressVisibility => EnableControls ? "Collapsed" : "Visible";
+        private uint _inProgressValue;
+        public uint InProgressValue
+        {
+            get => _inProgressValue;
+            set
+            {
+                _inProgressValue = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InProgressValue)));
+            }
+        }
+        private uint _inProgressMaximum;
+        public uint InProgressMaximum
+        {
+            get => _inProgressMaximum;
+            set
+            {
+                _inProgressMaximum = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InProgressMaximum)));
             }
         }
 
@@ -31,11 +54,15 @@ namespace MastodonFollowerTimes
             Settings = WpfSettings.Load();
             StatusesPerHour = new ObservableCollection<StatusPerHour>();
             EnableControls = true;
+            InProgressValue = 0;
+            InProgressMaximum = 0;
         }
 
         public async Task LoadData()
         {
             StatusesPerHour.Clear();
+            InProgressValue = 0;
+            InProgressMaximum = 0;
             EnableControls = false;
             try
             {
@@ -45,6 +72,7 @@ namespace MastodonFollowerTimes
                 Settings.Save();
 
                 var followers = await client.GetFollowerIdsForAccountId(accountId);
+                InProgressMaximum = (uint)followers.Count;
                 var totalStatuses = (uint)0;
                 var list = new List<StatusPerHour>();
                 foreach (var follower in followers)
@@ -60,6 +88,7 @@ namespace MastodonFollowerTimes
                         else
                             existingHour.StatusCount++;
                     }
+                    InProgressValue++;
                 }
                 foreach (var status in list.OrderBy(x => x.Hour))
                 {

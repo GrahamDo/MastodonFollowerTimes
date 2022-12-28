@@ -31,9 +31,14 @@
         <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Margin="0,0,5,0" 
                  IsEnabled="{Binding EnableControls}"
                  Text="{Binding Settings.AccountName}"></TextBox>
-        <Button Grid.Column="1" Grid.Row="3" Padding="5,0,5,0" Margin="0,0,5,0" IsDefault="True"
-                IsEnabled="{Binding EnableControls}"
-                Content="Find Best Times" HorizontalAlignment="Right" Width="Auto" Click="Button_Click"></Button>
+        <DockPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
+            <Button Padding="5,0,5,0" Margin="5,5,5,0" IsDefault="True"
+                    IsEnabled="{Binding EnableControls}"
+                    Content="Find Best Times" HorizontalAlignment="Right" Width="Auto" Click="Button_Click"/>
+            <ProgressBar Padding="5,0,5,0" Margin="5,5,5,0"
+                         Visibility="{Binding InProgressVisibility}" Value="{Binding InProgressValue}" 
+                         Maximum="{Binding InProgressMaximum}"/>
+        </DockPanel>
         <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,5,0,0" 
                   ItemsSource="{Binding StatusesPerHour}"
                   IsEnabled="{Binding EnableControls}"
