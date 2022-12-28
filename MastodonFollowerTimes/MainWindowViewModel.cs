@@ -28,6 +28,7 @@ namespace MastodonFollowerTimes
         }
 
         public string InProgressVisibility => EnableControls ? "Collapsed" : "Visible";
+        public bool InProgressIsIndeterminate => InProgressMaximum == 0;
         private uint _inProgressValue;
         public uint InProgressValue
         {
@@ -46,6 +47,7 @@ namespace MastodonFollowerTimes
             {
                 _inProgressMaximum = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InProgressMaximum)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InProgressIsIndeterminate)));
             }
         }
 
@@ -60,7 +62,7 @@ namespace MastodonFollowerTimes
         {
             StatusesPerHour.Clear();
             InProgressValue = 0;
-            InProgressMaximum = 1;
+            InProgressMaximum = 0;
             EnableControls = false;
             try
             {

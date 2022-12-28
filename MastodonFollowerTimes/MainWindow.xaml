@@ -36,7 +36,8 @@
                     IsEnabled="{Binding EnableControls}"
                     Content="Find Best Times" HorizontalAlignment="Right" Width="Auto" Click="Button_Click"/>
             <ProgressBar Padding="5,0,5,0" Margin="5,5,5,0"
-                         Visibility="{Binding InProgressVisibility}" Value="{Binding InProgressValue}" 
+                         Visibility="{Binding InProgressVisibility}" IsIndeterminate="{Binding InProgressIsIndeterminate}"
+                         Value="{Binding InProgressValue}" 
                          Maximum="{Binding InProgressMaximum}"/>
         </DockPanel>
         <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,5,0,0" 
