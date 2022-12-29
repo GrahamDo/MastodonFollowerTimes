@@ -41,19 +41,20 @@
                          Maximum="{Binding InProgressMaximum}"/>
         </DockPanel>
         <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Margin="0,5,0,0" 
+                  HorizontalContentAlignment="Stretch"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   ItemsSource="{Binding StatusesPerHour}"
                   IsEnabled="{Binding EnableControls}"
                   >
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <DockPanel>
                         <Label Content="{Binding Hour}" Width="24"></Label>
-                        <ProgressBar Height="24" Value="{Binding StatusCount}" 
+                        <ProgressBar Value="{Binding StatusCount}" 
                                      Maximum="{Binding ProgressBarMaximum}"
-                                     Width="500"
                                      ToolTip="{Binding PercentString}"
                                      />
-                    </StackPanel>
+                    </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
