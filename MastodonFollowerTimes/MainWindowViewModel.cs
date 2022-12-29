@@ -90,9 +90,12 @@ namespace MastodonFollowerTimes
                     }
                     InProgressValue++;
                 }
+
+                var progressBarMax = list.Max(x => x.StatusCount);
                 foreach (var status in list.OrderBy(x => x.Hour))
                 {
                     status.TotalStatuses = totalStatuses;
+                    status.ProgressBarMaximum = progressBarMax;
                     StatusesPerHour.Add(status);
                 }
             }

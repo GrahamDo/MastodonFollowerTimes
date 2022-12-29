@@ -49,7 +49,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label Content="{Binding Hour}" Width="24"></Label>
                         <ProgressBar Height="24" Value="{Binding StatusCount}" 
-                                     Maximum="{Binding TotalStatuses}"
+                                     Maximum="{Binding ProgressBarMaximum}"
                                      Width="500"
                                      ToolTip="{Binding PercentString}"
                                      />
