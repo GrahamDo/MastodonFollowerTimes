@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -11,7 +13,14 @@ namespace MastodonFollowerTimes
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public string WindowTitle => "Mastodon Follower Times: Fine the best time to post";
+        public string WindowTitle {
+            get
+            {
+                var asm = Assembly.GetExecutingAssembly();
+                var fvi = FileVersionInfo.GetVersionInfo(asm.Location);
+                return $"{fvi.ProductName} (Version {fvi.ProductVersion})";
+            }
+        }
         public WpfSettings Settings { get; }
         public ObservableCollection<StatusPerTimeBlock> StatusesPerHour { get; set; }
 

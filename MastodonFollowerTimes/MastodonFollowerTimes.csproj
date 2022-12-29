@@ -5,6 +5,10 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <Authors>Graham Downs</Authors>
+    <Product>Mastodon Follower Times</Product>
+    <Version>1.0.0</Version>
+    <Copyright>Copyright © Graham Downs 2022</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
