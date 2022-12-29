@@ -9,7 +9,12 @@
     <Product>Mastodon Follower Times</Product>
     <Version>1.0.0</Version>
     <Copyright>Copyright © Graham Downs 2022</Copyright>
+    <ApplicationIcon>MastodonFollowerTimes Icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="MastodonFollowerTimes Icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
