@@ -1,8 +1,10 @@
-﻿namespace MastodonFollowerTimes;
+﻿using System.Collections.Generic;
 
-internal class StatusPerHour
+namespace MastodonFollowerTimes;
+
+internal class StatusPerTimeBlock
 {
-    public byte Hour { get; set; }
+    public byte TimeBlock { get; set; }
     public uint StatusCount { get; set; }
     public uint TotalStatuses { get; set; }
     public uint ProgressBarMaximum { get; set; }
@@ -12,5 +14,11 @@ internal class StatusPerHour
             var percent = (float)StatusCount / (float)TotalStatuses;
             return percent.ToString("0.00%");
         }
+    }
+    public List<StatusPerTimeBlock> StatusesPerMinute { get; set; }
+
+    public StatusPerTimeBlock()
+    {
+        StatusesPerMinute = new List<StatusPerTimeBlock>();
     }
 }

@@ -13,7 +13,7 @@ namespace MastodonFollowerTimes
 
         public string WindowTitle => "Mastodon Follower Times: Fine the best time to post";
         public WpfSettings Settings { get; }
-        public ObservableCollection<StatusPerHour> StatusesPerHour { get; set; }
+        public ObservableCollection<StatusPerTimeBlock> StatusesPerHour { get; set; }
 
         private bool _enableControls;
         public bool EnableControls
@@ -54,7 +54,7 @@ namespace MastodonFollowerTimes
         public MainWindowViewModel()
         {
             Settings = WpfSettings.Load();
-            StatusesPerHour = new ObservableCollection<StatusPerHour>();
+            StatusesPerHour = new ObservableCollection<StatusPerTimeBlock>();
             EnableControls = true;
         }
 
@@ -74,29 +74,54 @@ namespace MastodonFollowerTimes
                 var followers = await client.GetFollowerIdsForAccountId(accountId);
                 InProgressMaximum = (uint)followers.Count;
                 var totalStatuses = (uint)0;
-                var list = new List<StatusPerHour>();
+                var list = new List<StatusPerTimeBlock>();
                 foreach (var follower in followers)
                 {
                     var statuses = await client.GetStatusesForFollowerId(follower.Id);
                     foreach (var status in statuses)
                     {
                         totalStatuses++;
-                        var hour = status.CreateAtUtc.ToLocalTime().Hour;
-                        var existingHour = list.FirstOrDefault(x => x.Hour == (byte)hour);
+                        var localTime = status.CreateAtUtc.ToLocalTime();
+                        var hour = localTime.Hour;
+                        var minute = localTime.Minute;
+                        var existingHour = list.FirstOrDefault(x => x.TimeBlock == (byte)hour);
                         if (existingHour == null)
-                            list.Add(new StatusPerHour { Hour = (byte)hour, StatusCount = 1 });
+                        {
+                            var statusPerHour = new StatusPerTimeBlock { TimeBlock = (byte)hour, StatusCount = 1 };
+                            statusPerHour.StatusesPerMinute.Add(new StatusPerTimeBlock { TimeBlock = (byte)minute, StatusCount = 1});
+                            list.Add(statusPerHour);
+                        }
                         else
+                        {
                             existingHour.StatusCount++;
+                            var existingMinute =
+                                existingHour.StatusesPerMinute.FirstOrDefault(x => x.TimeBlock == (byte)minute);
+                            if (existingMinute == null)
+                                existingHour.StatusesPerMinute.Add(new StatusPerTimeBlock
+                                    { TimeBlock = (byte)minute, StatusCount = 1 });
+                            else
+                                existingMinute.StatusCount++;
+                        }
                     }
                     InProgressValue++;
                 }
 
-                var progressBarMax = list.Max(x => x.StatusCount);
-                foreach (var status in list.OrderBy(x => x.Hour))
+                var hourProgressBarMax = list.Max(x => x.StatusCount);
+                foreach (var statusPerHour in list.OrderBy(x => x.TimeBlock))
                 {
-                    status.TotalStatuses = totalStatuses;
-                    status.ProgressBarMaximum = progressBarMax;
-                    StatusesPerHour.Add(status);
+                    statusPerHour.TotalStatuses = totalStatuses;
+                    statusPerHour.ProgressBarMaximum = hourProgressBarMax;
+                    var totalStatusesPerMinute = statusPerHour.StatusesPerMinute.Sum(x => x.StatusCount);
+                    var minuteProgressBarMax = statusPerHour.StatusesPerMinute.Max(x => x.StatusCount);
+                    foreach (var statusPerMinute in statusPerHour.StatusesPerMinute)
+                    {
+                        statusPerMinute.TotalStatuses = (uint)totalStatusesPerMinute;
+                        statusPerMinute.ProgressBarMaximum = minuteProgressBarMax;
+                    }
+
+                    statusPerHour.StatusesPerMinute =
+                        statusPerHour.StatusesPerMinute.OrderBy(x => x.TimeBlock).ToList();
+                    StatusesPerHour.Add(statusPerHour);
                 }
             }
             finally
