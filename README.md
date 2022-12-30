@@ -40,6 +40,6 @@ Before you can run this application, you'll need to create a Mastodon app and ge
 
 # Questions / Comments / Feedback?
 
-For tips and tricks, and to stay updated, follow <a rel="me" href="https://c.im/FollowerTimesApp">@FollowerTimesApp@c.im</a> on Mastodon.
+For tips and tricks, and to stay updated, follow <a rel="me" href="https://c.im/FollowerTimesApp">FollowerTimesApp@c.im</a> on Mastodon.
 
 If you think you've found a bug, or have a suggestion for a new feature, click the <a href="issues" target="_blank">Issues</a> tab, and create a new issue (after searching open issues to make sure yours hasn't already been reported, of course).
