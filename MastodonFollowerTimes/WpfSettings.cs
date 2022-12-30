@@ -8,9 +8,9 @@ internal class WpfSettings
 {
     private const string SettingsFileName = "settings.json";
 
-    public string InstanceUrl { get; set; }
-    public string Token { get; set; }
-    public string AccountName { get; set; }
+    public string InstanceUrl { get; set; } = null!;
+    public string Token { get; set; } = null!;
+    public string AccountName { get; set; } = null!;
 
     public static WpfSettings Load()
     {

@@ -31,7 +31,7 @@ namespace MastodonFollowerTimes
         public WpfSettings Settings { get; }
         public ObservableCollection<StatusPerTimeBlock> StatusesPerHour { get; set; }
 
-        private string _updateButtonVisibility;
+        private string _updateButtonVisibility = "Collapsed";
         public string UpdateButtonVisibility
         {
             get => _updateButtonVisibility;
@@ -80,7 +80,6 @@ namespace MastodonFollowerTimes
 
         public MainWindowViewModel()
         {
-            UpdateButtonVisibility = "Collapsed";
             Settings = WpfSettings.Load();
             StatusesPerHour = new ObservableCollection<StatusPerTimeBlock>();
             EnableControls = true;
@@ -162,11 +161,6 @@ namespace MastodonFollowerTimes
         {
             var client = new GitHubApiClient();
             UpdateButtonVisibility = await client.IsNewVersionAvailable(productVersion) ? "Visible" : "Collapsed";
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

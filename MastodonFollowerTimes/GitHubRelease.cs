@@ -5,7 +5,8 @@ namespace MastodonFollowerTimes;
 internal class GitHubRelease
 {
     [JsonProperty("tag_name")]
-    public string TagName { get; set; }
+    public string TagName { get; set; } = null!;
+
     [JsonProperty("draft")]
     public bool IsDraft { get; set; }
     [JsonProperty("prerelease")]

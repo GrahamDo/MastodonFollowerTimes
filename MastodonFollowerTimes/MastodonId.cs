@@ -2,5 +2,5 @@
 
 internal class MastodonId
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 }

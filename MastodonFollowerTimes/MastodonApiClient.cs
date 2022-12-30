@@ -12,7 +12,7 @@ namespace MastodonFollowerTimes;
 
 internal class MastodonApiClient
 {
-    private RestClient _restClient;
+    private RestClient _restClient = null!;
 
     public async Task VerifyCredentials(string instanceUrl, string token)
     {

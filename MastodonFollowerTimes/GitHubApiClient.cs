@@ -17,6 +17,9 @@ namespace MastodonFollowerTimes
             // Get top 5, in case there are drafts or pre-releases, which we need to exclude
 
             var response = await client.GetAsync(request);
+            if (response.Content == null)
+                throw new InvalidOperationException("Content was null when checking for updates");
+
             var releases = JsonConvert.DeserializeObject<List<GitHubRelease>>(response.Content);
             if (releases == null || !releases.Any())
                 return false;
