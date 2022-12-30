@@ -24,15 +24,15 @@
         <Label Grid.Column="0" Grid.Row="1">Instance URL:</Label>
         <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Margin="0,0,5,0" 
                  IsEnabled="{Binding EnableControls}"
-                 Text="{Binding Settings.InstanceUrl}"></TextBox>
+                 Text="{Binding Settings.InstanceUrl, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <Label Grid.Column="0" Grid.Row="2">Token:</Label>
         <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Margin="0,0,5,0" 
                  IsEnabled="{Binding EnableControls}"
-                 Text="{Binding Settings.Token}"></TextBox>
+                 Text="{Binding Settings.Token, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <Label Grid.Column="0" Grid.Row="3">Account Name:</Label>
         <TextBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Margin="0,0,5,0" 
                  IsEnabled="{Binding EnableControls}"
-                 Text="{Binding Settings.AccountName}"></TextBox>
+                 Text="{Binding Settings.AccountName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <DockPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
             <Button Padding="5,0,5,0" Margin="5,5,5,0" IsDefault="True"
                     IsEnabled="{Binding EnableControls}"
