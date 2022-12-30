@@ -13,16 +13,34 @@ namespace MastodonFollowerTimes
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public string WindowTitle {
+        public string WindowTitle
+        {
             get
             {
                 var asm = Assembly.GetExecutingAssembly();
                 var fvi = FileVersionInfo.GetVersionInfo(asm.Location);
+
+#pragma warning disable CS4014
+                SetUpdateButtonVisibility(fvi.ProductVersion ?? "0");
+                // Deliberately not awaiting because I don't want to lock up the UI
+#pragma warning restore CS4014
                 return $"{fvi.ProductName} (Version {fvi.ProductVersion})";
             }
         }
+
         public WpfSettings Settings { get; }
         public ObservableCollection<StatusPerTimeBlock> StatusesPerHour { get; set; }
+
+        private string _updateButtonVisibility;
+        public string UpdateButtonVisibility
+        {
+            get => _updateButtonVisibility;
+            set
+            {
+                _updateButtonVisibility = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UpdateButtonVisibility)));
+            }
+        }
 
         private bool _enableControls;
         public bool EnableControls
@@ -62,6 +80,7 @@ namespace MastodonFollowerTimes
 
         public MainWindowViewModel()
         {
+            UpdateButtonVisibility = "Collapsed";
             Settings = WpfSettings.Load();
             StatusesPerHour = new ObservableCollection<StatusPerTimeBlock>();
             EnableControls = true;
@@ -75,7 +94,7 @@ namespace MastodonFollowerTimes
             EnableControls = false;
             try
             {
-                var client = new ApiClient();
+                var client = new MastodonApiClient();
                 await client.VerifyCredentials(Settings.InstanceUrl, Settings.Token);
                 var accountId = await client.GetIdForAccountName(Settings.AccountName);
                 Settings.Save();
@@ -137,6 +156,12 @@ namespace MastodonFollowerTimes
             {
                 EnableControls = true;
             }
+        }
+
+        public async Task SetUpdateButtonVisibility(string productVersion)
+        {
+            var client = new GitHubApiClient();
+            UpdateButtonVisibility = await client.IsNewVersionAvailable(productVersion) ? "Visible" : "Collapsed";
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

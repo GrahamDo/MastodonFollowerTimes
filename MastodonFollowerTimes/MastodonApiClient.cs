@@ -10,7 +10,7 @@ using RestSharp.Authenticators.OAuth2;
 
 namespace MastodonFollowerTimes;
 
-internal class ApiClient
+internal class MastodonApiClient
 {
     private RestClient _restClient;
 
