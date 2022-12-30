@@ -14,7 +14,7 @@ The logic here is that the times when most of your followers post will be the ti
 
 There is no installation package. All you need to do is head on over to <a href="https://github.com/GrahamDo/MastodonFollowerTimes/releases" target="_blank">Releases</a> and download the most recent zip file.
 
-Create a directory on your computer (such as "C:\MastodonFollowerTimes") and extract the contents of that zip file into that directory.
+Create a directory on your computer (such as "C:\MastodonFollowerTimes") and extract the contents of the zip file into that directory.
 
 Then, simply double-click the exe to run the program.
 
