@@ -12,7 +12,7 @@ The logic here is that the times when most of your followers post will be the ti
 
 # Installation
 
-There is no installation package. All you need to do is head on over to <a href="releases" target="_blank">Releases</a> and download the most recent zip file.
+There is no installation package. All you need to do is head on over to <a href="https://github.com/GrahamDo/MastodonFollowerTimes/releases" target="_blank">Releases</a> and download the most recent zip file.
 
 Create a directory on your computer (such as "C:\MastodonFollowerTimes") and extract the contents of that zip file into that directory.
 
@@ -42,4 +42,4 @@ Before you can run this application, you'll need to create a Mastodon app and ge
 
 For tips and tricks, and to stay updated, <a rel="me" href="https://c.im/@FollowerTimesApp">Follow us on Mastodon</a>.
 
-If you think you've found a bug, or have a suggestion for a new feature, click the <a href="issues" target="_blank">Issues</a> tab, and create a new issue (after searching open issues to make sure yours hasn't already been reported, of course).
+If you think you've found a bug, or have a suggestion for a new feature, click the <a href="https://github.com/GrahamDo/MastodonFollowerTimes/issues" target="_blank">Issues</a> tab, and create a new issue (after searching open issues to make sure yours hasn't already been reported, of course).
