@@ -195,7 +195,7 @@
                         <ProgressBar Margin="0,5,0,0"
                                      Value="{Binding StatusCount}" 
                                      Maximum="{Binding ProgressBarMaximum}"
-                                     ToolTip="{Binding PercentString}"
+                                     ToolTip="{Binding ProgressBarTooltip}"
                         />
                     </DockPanel>
                 </HierarchicalDataTemplate>

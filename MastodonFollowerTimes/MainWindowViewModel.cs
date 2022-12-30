@@ -113,8 +113,8 @@ namespace MastodonFollowerTimes
                         var existingHour = list.FirstOrDefault(x => x.TimeBlock == (byte)hour);
                         if (existingHour == null)
                         {
-                            var statusPerHour = new StatusPerTimeBlock { TimeBlock = (byte)hour, StatusCount = 1 };
-                            statusPerHour.StatusesPerMinute.Add(new StatusPerTimeBlock { TimeBlock = (byte)minute, StatusCount = 1});
+                            var statusPerHour = new StatusPerTimeBlock(TimeBlockTypes.Hour) { TimeBlock = (byte)hour, StatusCount = 1 };
+                            statusPerHour.StatusesPerMinute.Add(new StatusPerTimeBlock(TimeBlockTypes.Minute) { TimeBlock = (byte)minute, StatusCount = 1});
                             list.Add(statusPerHour);
                         }
                         else
@@ -123,7 +123,7 @@ namespace MastodonFollowerTimes
                             var existingMinute =
                                 existingHour.StatusesPerMinute.FirstOrDefault(x => x.TimeBlock == (byte)minute);
                             if (existingMinute == null)
-                                existingHour.StatusesPerMinute.Add(new StatusPerTimeBlock
+                                existingHour.StatusesPerMinute.Add(new StatusPerTimeBlock(TimeBlockTypes.Minute)
                                     { TimeBlock = (byte)minute, StatusCount = 1 });
                             else
                                 existingMinute.StatusCount++;
