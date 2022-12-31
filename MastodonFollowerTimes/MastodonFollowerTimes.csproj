@@ -17,6 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\LICENCE" Link="LICENCE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="RestSharp" Version="108.0.3" />
   </ItemGroup>
