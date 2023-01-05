@@ -7,7 +7,7 @@ namespace MastodonFollowerTimes
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
@@ -19,8 +19,7 @@ namespace MastodonFollowerTimes
         {
             try
             {
-                var vm = DataContext as MainWindowViewModel;
-                if (vm == null)
+                if (DataContext is not MainWindowViewModel vm)
                     throw new ApplicationException("ViewModel is null");
 
                 await vm.LoadData();

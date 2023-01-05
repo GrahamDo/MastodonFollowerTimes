@@ -41,7 +41,7 @@ internal class MastodonApiClient
         }
     }
 
-    private string BuildBaseUrl(string instanceUrl)
+    private static string BuildBaseUrl(string instanceUrl)
     {
         var baseUrlSb = new StringBuilder();
         if (!instanceUrl.StartsWith("https://"))
@@ -70,7 +70,7 @@ internal class MastodonApiClient
                    "Couldn't get the account details. Are you sure you entered the account name correctly?");
     }
 
-    private void CheckForNullContent(string? content, string apiMethodName)
+    private static void CheckForNullContent(string? content, string apiMethodName)
     {
         if (content == null)
             throw new InvalidOperationException($"{apiMethodName} API method returned nothing");
