@@ -14,7 +14,7 @@ internal class MastodonApiClient
 {
     private RestClient _restClient = null!;
 
-    public async Task VerifyCredentials(string instanceUrl, string token)
+    public void VerifyCredentials(string instanceUrl, string token)
     {
         if (string.IsNullOrEmpty(instanceUrl))
             throw new ApplicationException("Please specify the instance URL");
@@ -30,7 +30,7 @@ internal class MastodonApiClient
         var request = new RestRequest($"apps/verify_credentials");
         try
         {
-            await _restClient.GetAsync(request);
+            _restClient.Get(request);
         }
         catch (HttpRequestException ex)
         {
@@ -53,14 +53,14 @@ internal class MastodonApiClient
         return baseUrlSb.ToString();
     }
 
-    public async Task<string> GetIdForAccountName(string accountName)
+    public string GetIdForAccountName(string accountName)
     {
         VerifyRestClientSpecified();
         if (string.IsNullOrEmpty(accountName))
             throw new ApplicationException("Please specify the account name");
 
         var request = new RestRequest($"accounts/lookup?acct={accountName}");
-        var response = await _restClient.GetAsync(request);
+        var response = _restClient.Get(request);
         CheckForNullContent(response.Content, "Lookup account");
 
         Debug.Assert(response.Content != null, "response.Content != null");
@@ -83,12 +83,12 @@ internal class MastodonApiClient
                 $"You must call {nameof(VerifyCredentials)} before calling this method");
     }
 
-    public async Task<List<MastodonId>> GetFollowerIdsForAccountId(string accountId)
+    public List<MastodonId> GetFollowerIdsForAccountId(string accountId)
     {
         VerifyRestClientSpecified();
 
         var request = new RestRequest($"accounts/{accountId}/followers?limit=80");
-        var response = await _restClient.GetAsync(request);
+        var response = _restClient.Get(request);
         CheckForNullContent(response.Content, "Lookup followers");
 
         Debug.Assert(response.Content != null, "response.Content != null");
@@ -97,12 +97,12 @@ internal class MastodonApiClient
             "Couldn't get the list of followers. Are you sure you entered the account has followers?");
     }
 
-    public async Task<List<MastodonStatus>> GetStatusesForFollowerId(string accountId)
+    public List<MastodonStatus> GetStatusesForFollowerId(string accountId)
     {
         VerifyRestClientSpecified();
         
         var request = new RestRequest($"accounts/{accountId}/statuses?limit=40");
-        var response = await _restClient.GetAsync(request);
+        var response = _restClient.Get(request);
         CheckForNullContent(response.Content, $"Get statuses for follower {accountId}");
 
         Debug.Assert(response.Content != null, "response.Content != null");

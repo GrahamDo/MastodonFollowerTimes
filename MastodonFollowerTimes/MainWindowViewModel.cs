@@ -117,22 +117,22 @@ namespace MastodonFollowerTimes
             UpdateButtonVisibility = await client.IsNewVersionAvailable(productVersion) ? "Visible" : "Collapsed";
         }
 
-        private async void BackgroundWorkerOnDoWork(object? sender, DoWorkEventArgs e)
+        private void BackgroundWorkerOnDoWork(object? sender, DoWorkEventArgs e)
         {
             try
             {
                 var client = new MastodonApiClient();
-                await client.VerifyCredentials(Settings.InstanceUrl, Settings.Token);
+                client.VerifyCredentials(Settings.InstanceUrl, Settings.Token);
                 var accountId = client.GetIdForAccountName(Settings.AccountName);
                 Settings.Save();
 
-                var followers = await client.GetFollowerIdsForAccountId(accountId);
+                var followers = client.GetFollowerIdsForAccountId(accountId);
                 _backgroundWorker.ReportProgress(followers.Count, BackgroundWorkerProgressStates.SetMaximum);
                 var totalStatuses = (uint)0;
                 var list = new List<StatusPerTimeBlock>();
                 foreach (var follower in followers)
                 {
-                    var statuses = await client.GetStatusesForFollowerId(follower.Id);
+                    var statuses = client.GetStatusesForFollowerId(follower.Id);
                     foreach (var status in statuses)
                     {
                         totalStatuses++;
@@ -162,7 +162,7 @@ namespace MastodonFollowerTimes
                 }
 
                 var hourProgressBarMax = list.Max(x => x.StatusCount);
-                foreach (var statusPerHour in list.OrderBy(x => x.TimeBlock))
+                foreach (var statusPerHour in list)
                 {
                     statusPerHour.TotalStatuses = totalStatuses;
                     statusPerHour.ProgressBarMaximum = hourProgressBarMax;
@@ -176,8 +176,8 @@ namespace MastodonFollowerTimes
 
                     statusPerHour.StatusesPerMinute =
                         statusPerHour.StatusesPerMinute.OrderBy(x => x.TimeBlock).ToList();
-                    StatusesPerHour.Add(statusPerHour);
                 }
+                _backgroundWorker.ReportProgress(-1, list.OrderBy(x => x.TimeBlock).ToList());
             }
             catch (Exception ex)
             {
@@ -190,6 +190,12 @@ namespace MastodonFollowerTimes
         }
         private void BackgroundWorkerOnProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
+            if (e.UserState is List<StatusPerTimeBlock> list)
+            {
+                list.ForEach(StatusesPerHour.Add);
+                return;
+            }
+
             if (e.UserState is Exception ex)
             {
                 ShowExceptionOnUi(ex);
