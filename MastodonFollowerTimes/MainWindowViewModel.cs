@@ -1,16 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MastodonFollowerTimes
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
+        private enum BackgroundWorkerProgressStates
+        {
+            SetMaximum,
+            ReportProgress,
+            Done
+        }
+
+        private readonly BackgroundWorker _backgroundWorker;
+        private readonly MainWindow _view;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string WindowTitle
@@ -78,28 +89,45 @@ namespace MastodonFollowerTimes
             }
         }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(MainWindow view)
         {
             Settings = WpfSettings.Load();
             StatusesPerHour = new ObservableCollection<StatusPerTimeBlock>();
+            _view = view;
+            _backgroundWorker = new BackgroundWorker();
+            _backgroundWorker.WorkerReportsProgress = true;
+            _backgroundWorker.WorkerSupportsCancellation = false;
+            _backgroundWorker.ProgressChanged += BackgroundWorkerOnProgressChanged;
+            _backgroundWorker.DoWork += BackgroundWorkerOnDoWork;
             EnableControls = true;
         }
 
-        public async Task LoadData()
+        public void LoadData()
         {
             StatusesPerHour.Clear();
             InProgressValue = 0;
             InProgressMaximum = 0;
             EnableControls = false;
+            _backgroundWorker.RunWorkerAsync();
+        }
+
+        public async Task SetUpdateButtonVisibility(string productVersion)
+        {
+            var client = new GitHubApiClient();
+            UpdateButtonVisibility = await client.IsNewVersionAvailable(productVersion) ? "Visible" : "Collapsed";
+        }
+
+        private async void BackgroundWorkerOnDoWork(object? sender, DoWorkEventArgs e)
+        {
             try
             {
                 var client = new MastodonApiClient();
                 await client.VerifyCredentials(Settings.InstanceUrl, Settings.Token);
-                var accountId = await client.GetIdForAccountName(Settings.AccountName);
+                var accountId = client.GetIdForAccountName(Settings.AccountName);
                 Settings.Save();
 
                 var followers = await client.GetFollowerIdsForAccountId(accountId);
-                InProgressMaximum = (uint)followers.Count;
+                _backgroundWorker.ReportProgress(followers.Count, BackgroundWorkerProgressStates.SetMaximum);
                 var totalStatuses = (uint)0;
                 var list = new List<StatusPerTimeBlock>();
                 foreach (var follower in followers)
@@ -115,7 +143,7 @@ namespace MastodonFollowerTimes
                         if (existingHour == null)
                         {
                             var statusPerHour = new StatusPerTimeBlock { TimeBlock = (byte)hour, StatusCount = 1 };
-                            statusPerHour.StatusesPerMinute.Add(new StatusPerTimeBlock { TimeBlock = (byte)minute, StatusCount = 1});
+                            statusPerHour.StatusesPerMinute.Add(new StatusPerTimeBlock { TimeBlock = (byte)minute, StatusCount = 1 });
                             list.Add(statusPerHour);
                         }
                         else
@@ -125,12 +153,12 @@ namespace MastodonFollowerTimes
                                 existingHour.StatusesPerMinute.FirstOrDefault(x => x.TimeBlock == (byte)minute);
                             if (existingMinute == null)
                                 existingHour.StatusesPerMinute.Add(new StatusPerTimeBlock
-                                    { TimeBlock = (byte)minute, StatusCount = 1 });
+                                { TimeBlock = (byte)minute, StatusCount = 1 });
                             else
                                 existingMinute.StatusCount++;
                         }
                     }
-                    InProgressValue++;
+                    _backgroundWorker.ReportProgress(-1, BackgroundWorkerProgressStates.ReportProgress);
                 }
 
                 var hourProgressBarMax = list.Max(x => x.StatusCount);
@@ -151,16 +179,46 @@ namespace MastodonFollowerTimes
                     StatusesPerHour.Add(statusPerHour);
                 }
             }
+            catch (Exception ex)
+            {
+                _backgroundWorker.ReportProgress(-1, ex);
+            }
             finally
             {
-                EnableControls = true;
+                _backgroundWorker.ReportProgress(-1, BackgroundWorkerProgressStates.Done);
+            }
+        }
+        private void BackgroundWorkerOnProgressChanged(object? sender, ProgressChangedEventArgs e)
+        {
+            if (e.UserState is Exception ex)
+            {
+                ShowExceptionOnUi(ex);
+                return;
+            }
+
+            var progressType =
+                (BackgroundWorkerProgressStates)(e.UserState ??
+                                                 throw new InvalidOperationException("Invalid Progress State"));
+            switch (progressType)
+            {
+                case BackgroundWorkerProgressStates.SetMaximum:
+                    InProgressMaximum = (uint)e.ProgressPercentage;
+                    break;
+                case BackgroundWorkerProgressStates.ReportProgress:
+                    InProgressValue++;
+                    break;
+                case BackgroundWorkerProgressStates.Done:
+                    EnableControls = true;
+                    break;
             }
         }
 
-        public async Task SetUpdateButtonVisibility(string productVersion)
+        private void ShowExceptionOnUi(Exception exception)
         {
-            var client = new GitHubApiClient();
-            UpdateButtonVisibility = await client.IsNewVersionAvailable(productVersion) ? "Visible" : "Collapsed";
+            if (exception is ApplicationException ex)
+                MessageBox.Show(_view, ex.Message, WindowTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            else
+                MessageBox.Show(_view, exception.ToString(), WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

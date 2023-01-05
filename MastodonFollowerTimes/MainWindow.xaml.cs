@@ -12,27 +12,17 @@ namespace MastodonFollowerTimes
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            var vm = new MainWindowViewModel(this);
+            DataContext = vm;
         }
 
-        private async void ProcessButton_Click(object sender, RoutedEventArgs e)
+        private void ProcessButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var vm = DataContext as MainWindowViewModel;
-                if (vm == null)
-                    throw new ApplicationException("ViewModel is null");
+            var vm = DataContext as MainWindowViewModel;
+            if (vm == null)
+                throw new ApplicationException("ViewModel is null");
 
-                await vm.LoadData();
-            }
-            catch (ApplicationException ex)
-            {
-                MessageBox.Show(this, ex.Message, Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString(), Title, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            vm.LoadData();
         }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
