@@ -24,7 +24,7 @@ Also note that you need the .NET 7 Desktop Runtime installed on your computer to
 
 Finally, you might want to create a shortcut to the application exe and copy it (the shortcut, not the exe) to a convenient location like your start menu or desktop.
 
-**Important: the first time you run MastodonFollowerTimes—either the first time ever, or the first time after upgrading—you may get a warning from Windows that the application isn't signed. If so, click "Run Anyway" (you might need to click "Advanced" first, depending on your version of WIndows).**
+**Important: the first time you run MastodonFollowerTimes—either the first time ever, or the first time after upgrading—you may get a warning from Windows that the application isn't signed. If so, click "Run Anyway" (you might need to click "Advanced" or "More Info" first, depending on your version of WIndows).**
 
 ## Creating a Token
 
