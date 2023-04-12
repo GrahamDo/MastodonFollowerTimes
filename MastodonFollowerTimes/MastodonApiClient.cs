@@ -22,10 +22,11 @@ internal class MastodonApiClient
             throw new ApplicationException("Please specify the token");
 
         var baseUrl = BuildBaseUrl(instanceUrl);
-        _restClient = new RestClient(baseUrl)
+        var options = new RestClientOptions(baseUrl)
         {
             Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(token, "Bearer")
         };
+        _restClient = new RestClient(options);
         
         var request = new RestRequest($"apps/verify_credentials");
         try
