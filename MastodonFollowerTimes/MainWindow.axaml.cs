@@ -1,7 +1,11 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace MastodonFollowerTimes;
 
@@ -24,11 +28,13 @@ public partial class MainWindow : Window
         }
         catch (ApplicationException ex)
         {
-            //TODO MessageBox.Show(this, ex.Message, Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            Debug.Assert(Title != null, nameof(Title) + " != null");
+            await MessageBox(Title, ex.Message, MsBox.Avalonia.Enums.Icon.Warning);
         }
         catch (Exception ex)
         {
-            //TODO MessageBox.Show(this, ex.ToString(), Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            Debug.Assert(Title != null, nameof(Title) + " != null");
+            await MessageBox(Title, ex.ToString(), MsBox.Avalonia.Enums.Icon.Error);
         }
     }    
     
@@ -39,5 +45,11 @@ public partial class MainWindow : Window
             UseShellExecute = true
         };
         Process.Start(psi);
-    }    
+    }
+
+    private async Task MessageBox(string caption, string text, Icon icon)
+    {
+        var box = MessageBoxManager.GetMessageBoxStandard(caption, text, ButtonEnum.Ok, icon);
+        await box.ShowWindowDialogAsync(this);
+    }
 }
