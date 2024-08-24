@@ -7,5 +7,40 @@
         x:Class="MastodonFollowerTimes.MainWindow"
         x:DataType="mastodonFollowerTimes:MainWindowViewModel"
         Title="{Binding WindowTitle}" Height="865" Width="555">
-    Welcome to Avalonia!
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Content="Update Available" IsVisible="{Binding IsUpdateButtonVisible, UpdateSourceTrigger=PropertyChanged}" Click="UpdateButton_Click" />
+        <Label Grid.Column="0" Grid.Row="1">Instance URL:</Label>
+        <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Margin="0,0,5,0" 
+                 IsEnabled="{Binding EnableControls}"
+                 Text="{Binding Settings.InstanceUrl, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Label Grid.Column="0" Grid.Row="2">Token:</Label>
+        <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Margin="0,0,5,0" 
+                 IsEnabled="{Binding EnableControls}"
+                 Text="{Binding Settings.Token, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Label Grid.Column="0" Grid.Row="3">Account Name:</Label>
+        <TextBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Margin="0,0,5,0" 
+                 IsEnabled="{Binding EnableControls}"
+                 Text="{Binding Settings.AccountName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <DockPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
+            <Button Padding="5,0,5,0" Margin="5,5,5,0" IsDefault="True"
+                    IsEnabled="{Binding EnableControls}"
+                    Content="Find Best Times" HorizontalAlignment="Right" Click="ProcessButton_Click"/>
+            <ProgressBar Padding="5,0,5,0" Margin="5,5,5,0"
+                         IsVisible="{Binding IsInProgressVisible}" IsIndeterminate="{Binding InProgressIsIndeterminate}"
+                         Value="{Binding InProgressValue}" 
+                         Maximum="{Binding InProgressMaximum}"/>
+        </DockPanel>
+    </Grid>
 </Window>

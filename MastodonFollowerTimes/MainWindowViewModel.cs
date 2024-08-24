@@ -30,14 +30,14 @@ namespace MastodonFollowerTimes
         public WpfSettings Settings { get; }
         public ObservableCollection<StatusPerTimeBlock> StatusesPerHour { get; set; }
 
-        private string _updateButtonVisibility = "Collapsed";
-        public string UpdateButtonVisibility
+        private bool _isUpdateButtonVisible;
+        public bool IsUpdateButtonVisible
         {
-            get => _updateButtonVisibility;
+            get => _isUpdateButtonVisible;
             set
             {
-                _updateButtonVisibility = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UpdateButtonVisibility)));
+                _isUpdateButtonVisible = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUpdateButtonVisible)));
             }
         }
 
@@ -49,11 +49,11 @@ namespace MastodonFollowerTimes
             {
                 _enableControls = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnableControls)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InProgressVisibility)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsInProgressVisible)));
             }
         }
 
-        public string InProgressVisibility => EnableControls ? "Collapsed" : "Visible";
+        public bool IsInProgressVisible => !EnableControls;
         public bool InProgressIsIndeterminate => InProgressMaximum == 0;
         private uint _inProgressValue;
         public uint InProgressValue
@@ -159,7 +159,7 @@ namespace MastodonFollowerTimes
         public async Task SetUpdateButtonVisibility(string productVersion)
         {
             var client = new GitHubApiClient();
-            UpdateButtonVisibility = await client.IsNewVersionAvailable(productVersion) ? "Visible" : "Collapsed";
+            IsUpdateButtonVisible = await client.IsNewVersionAvailable(productVersion);
         }
     }
 }
