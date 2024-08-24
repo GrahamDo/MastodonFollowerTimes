@@ -23,7 +23,7 @@ namespace MastodonFollowerTimes
                 SetUpdateButtonVisibility(fvi.ProductVersion ?? "0");
                 // Deliberately not awaiting because I don't want to lock up the UI
 #pragma warning restore CS4014
-                return $"{fvi.ProductName} (Version {fvi.ProductVersion})";
+                return $"{fvi.ProductName} (Version {fvi.FileVersion})";
             }
         }
 

@@ -6,6 +6,10 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <Company>Graham Downs</Company>
+        <Product>Mastodon Follower Times</Product>
+        <AssemblyVersion>1.2.0</AssemblyVersion>
+        <AssemblyTitle>Mastodon Follower Times</AssemblyTitle>
     </PropertyGroup>
 
     <ItemGroup>
