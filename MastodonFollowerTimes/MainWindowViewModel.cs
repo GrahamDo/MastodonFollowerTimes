@@ -20,7 +20,7 @@ namespace MastodonFollowerTimes
                 var fvi = FileVersionInfo.GetVersionInfo(asm.Location);
 
 #pragma warning disable CS4014
-                SetUpdateButtonVisibility(fvi.ProductVersion ?? "0");
+                SetUpdateButtonVisibility(fvi.FileVersion ?? "0");
                 // Deliberately not awaiting because I don't want to lock up the UI
 #pragma warning restore CS4014
                 return $"{fvi.ProductName} (Version {fvi.FileVersion})";
