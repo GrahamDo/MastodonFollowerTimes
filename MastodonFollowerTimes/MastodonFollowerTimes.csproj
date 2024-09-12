@@ -10,7 +10,7 @@
         <Product>Mastodon Follower Times</Product>
         <AssemblyVersion>1.2.0</AssemblyVersion>
         <AssemblyTitle>Mastodon Follower Times</AssemblyTitle>
-        <ApplicationIcon>MastodonFollowerTimes Icon.ico</ApplicationIcon>
+        <ApplicationIcon>icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
