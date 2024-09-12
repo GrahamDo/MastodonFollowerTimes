@@ -37,7 +37,7 @@
             <Button Margin="5,5,5,0" IsDefault="True"
                     IsEnabled="{Binding EnableControls}"
                     Content="Find Best Times" HorizontalAlignment="Right" Click="ProcessButton_Click"/>
-            <ProgressBar Margin="5,5,5,0" Width="400"
+            <ProgressBar Margin="5,5,5,0"
                          IsVisible="{Binding IsInProgressVisible}" IsIndeterminate="{Binding InProgressIsIndeterminate}"
                          Value="{Binding InProgressValue}" 
                          Maximum="{Binding InProgressMaximum}"/>
