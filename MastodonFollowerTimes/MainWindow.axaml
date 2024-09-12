@@ -20,7 +20,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Content="Update Available" IsVisible="{Binding IsUpdateButtonVisible, UpdateSourceTrigger=PropertyChanged}" Click="UpdateButton_Click" />
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Update Available" IsVisible="{Binding IsUpdateButtonVisible, UpdateSourceTrigger=PropertyChanged}" Click="UpdateButton_Click" />
         <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">Instance URL:</Label>
         <TextBox Grid.Column="1" Grid.Row="1" Margin="0,0,5,0" 
                  IsEnabled="{Binding EnableControls}"
