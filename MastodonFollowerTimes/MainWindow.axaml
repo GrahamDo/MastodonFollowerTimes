@@ -37,7 +37,7 @@
             <Button Margin="5,5,5,0" IsDefault="True"
                     IsEnabled="{Binding EnableControls}"
                     Content="Find Best Times" HorizontalAlignment="Right" Click="ProcessButton_Click"/>
-            <ProgressBar Margin="5,5,5,0"
+            <ProgressBar Margin="5,5,5,0" VerticalAlignment="Stretch"
                          IsVisible="{Binding IsInProgressVisible}" IsIndeterminate="{Binding InProgressIsIndeterminate}"
                          Value="{Binding InProgressValue}" 
                          Maximum="{Binding InProgressMaximum}"/>
@@ -51,7 +51,7 @@
                                           ItemsSource="{Binding StatusesPerMinute}">
                     <DockPanel ToolTip.Tip="{Binding ProgressBarTooltip}">
                         <Label Content="{Binding TimeBlock}" Width="24"></Label>
-                        <ProgressBar Margin="0,5,0,0"
+                        <ProgressBar Margin="0,5,0,0" VerticalAlignment="Stretch"
                                      Value="{Binding StatusCount}" 
                                      Maximum="{Binding ProgressBarMaximum}"
                                      
