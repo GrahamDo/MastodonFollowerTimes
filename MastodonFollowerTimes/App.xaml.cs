@@ -1,11 +1,12 @@
-﻿using System.Windows;
+﻿using Microsoft.Maui.Controls;
 
-namespace MastodonFollowerTimes
+namespace MastodonFollowerTimes;
+
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App
+    public App()
     {
+        InitializeComponent();
+        MainPage = new NavigationPage(new MainPage());
     }
 }
